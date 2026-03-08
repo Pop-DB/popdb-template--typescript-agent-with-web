@@ -42,6 +42,8 @@ npm run build:staging    # TypeScript check + build with staging env
 npm run build:production # TypeScript check + build with production env
 ```
 
+**Workflow**: Users typically do not run the local dev server. After making changes, build with `npm run build:staging` and deploy to PopDB staging hosting to test. Use `npm run dev` only for rapid local iteration.
+
 ## Environment Configuration
 
 After cloning, the PopDB MCP writes `.env.staging` and `.env.production` with `VITE_API_URL`, `VITE_AUTH_URL`, `VITE_ENVIRONMENT`, and `VITE_APP_ID`. Vite auto-loads the correct file based on the `--mode` flag. The app throws at startup if any are missing.
