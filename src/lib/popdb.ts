@@ -256,6 +256,9 @@ export const max = (col: string, alias?: string) =>
   alias ? `${alias}:${col}.max()` : `${col}.max()`;
 
 // --- REST API ---
+//
+// NOTE: The server enforces a maximum of 1,000 rows per request. Always pass
+// `limit` explicitly for list queries so pagination behavior is intentional.
 
 export async function apiFetch<T>(
   path: string,
