@@ -7,7 +7,10 @@ const ENVIRONMENT = import.meta.env.VITE_ENVIRONMENT;
 export type User = {
   id: string;
   email: string;
-  role: string;
+  emailVerified: boolean;
+  displayName: string | null;
+  isActive: boolean;
+  createdAt: string;
   [key: string]: unknown;
 };
 
@@ -219,7 +222,9 @@ export async function getMe(): Promise<User> {
     );
   }
 
-  return response.json() as Promise<User>;
+  const data = (await response.json()) as { user: User };
+  setUser(data.user);
+  return data.user;
 }
 
 export function logout(): void {
