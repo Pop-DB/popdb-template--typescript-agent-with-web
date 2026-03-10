@@ -44,6 +44,7 @@ export class ApiError extends Error {
 
 const ACCESS_TOKEN_KEY = "popdb_access_token";
 const REFRESH_TOKEN_KEY = "popdb_refresh_token";
+const USER_KEY = "popdb_user";
 
 export function getAccessToken(): string | null {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -61,9 +62,33 @@ export function setRefreshToken(token: string): void {
   localStorage.setItem(REFRESH_TOKEN_KEY, token);
 }
 
-export function clearTokens(): void {
+export function getUser(): User | null {
+  const raw = localStorage.getItem(USER_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as User;
+  } catch {
+    return null;
+  }
+}
+
+export function getUserId(): string | null {
+  return getUser()?.id ?? null;
+}
+
+function setUser(user: User): void {
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+}
+
+function clearSession(): void {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+}
+
+/** @deprecated Use clearSession internally; kept for backwards compat */
+export function clearTokens(): void {
+  clearSession();
 }
 
 // --- Internal Helpers ---
@@ -121,6 +146,7 @@ export async function login(
   const data = (await response.json()) as AuthResponse;
   setAccessToken(data.accessToken);
   setRefreshToken(data.refreshToken);
+  setUser(data.user);
   return data;
 }
 
@@ -146,6 +172,7 @@ export async function register(
   const data = (await response.json()) as AuthResponse;
   setAccessToken(data.accessToken);
   setRefreshToken(data.refreshToken);
+  setUser(data.user);
   return data;
 }
 
@@ -162,7 +189,7 @@ export async function refreshSession(): Promise<AuthResponse> {
   });
 
   if (!response.ok) {
-    clearTokens();
+    clearSession();
     const body = await response.json().catch(() => ({}));
     throw new ApiError(
       response.status,
@@ -174,6 +201,7 @@ export async function refreshSession(): Promise<AuthResponse> {
   const data = (await response.json()) as AuthResponse;
   setAccessToken(data.accessToken);
   setRefreshToken(data.refreshToken);
+  setUser(data.user);
   return data;
 }
 
@@ -195,7 +223,7 @@ export async function getMe(): Promise<User> {
 }
 
 export function logout(): void {
-  clearTokens();
+  clearSession();
 }
 
 // --- PostgREST Query Helpers ---
