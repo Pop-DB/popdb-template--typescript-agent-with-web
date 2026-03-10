@@ -81,7 +81,7 @@ After setup, the PopDB MCP writes `.env.staging` and `.env.production` with `VIT
 Pre-built helpers — read the file for full details:
 
 - **Auth**: `login`, `register`, `logout`, `getMe`, `refreshSession`
-- **Token management**: `getAccessToken`, `clearTokens`, etc. (localStorage)
+- **User/session management**: `getUser`, `getUserId`, `getAccessToken` (all localStorage). The logged-in user is stored automatically on login/register/refresh — use `getUserId()` to include `user_id` in POST bodies without an extra API call.
 - **REST**: `apiFetch<T>(path, options)` — auto-attaches auth + environment headers, handles 401 with token refresh, supports `limit`, `offset`, `single`, `prefer`
 - **PostgREST query helpers**: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `in_`, `isNull`, `isNotNull`, `like`, `ilike`, `match`, `imatch`, `fts`, `contains`, `containedBy`, `not`, `or`
 - **Aggregate helpers**: `count`, `sum`, `avg`, `min`, `max` — use with caution, ensure indexed columns; server max is 1,000 rows per request
