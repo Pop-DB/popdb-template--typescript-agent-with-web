@@ -64,22 +64,22 @@ async function main() {
     config = mod.default || mod;
   }
 
-  const taskEntries = config.tasks ?? config.handlers;
-  if (!taskEntries || Object.keys(taskEntries).length === 0) {
-    console.log('No tasks found in config');
+  const handlerEntries = config.handlers ?? config.tasks;
+  if (!handlerEntries || Object.keys(handlerEntries).length === 0) {
+    console.log('No handlers found in config');
     return;
   }
 
-  const entries = Object.entries(taskEntries);
-  const tsTasks = entries.filter(([, h]) => h.file.endsWith('.ts'));
+  const entries = Object.entries(handlerEntries);
+  const tsHandlers = entries.filter(([, h]) => h.file.endsWith('.ts'));
 
-  if (tsTasks.length === 0) {
-    console.log('No TypeScript tasks to compile');
+  if (tsHandlers.length === 0) {
+    console.log('No TypeScript handlers to compile');
     return;
   }
 
   await Promise.all(
-    tsTasks.map(async ([name, h]) => {
+    tsHandlers.map(async ([name, h]) => {
       const inputPath = join(projectDir, h.file);
       const outputPath = inputPath.replace(/\.ts$/, '.compiled.mjs');
       await compileFile(inputPath, outputPath);
@@ -87,7 +87,7 @@ async function main() {
     })
   );
 
-  console.log(`\nCompiled ${tsTasks.length} task(s) successfully`);
+  console.log(`\nCompiled ${tsHandlers.length} handler(s) successfully`);
 }
 
 main().catch((err) => {

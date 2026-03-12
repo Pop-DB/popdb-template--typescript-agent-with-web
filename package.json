@@ -7,7 +7,7 @@
     "dev": "vite --mode staging",
     "build:staging": "tsc -b && vite build --mode staging",
     "build:production": "tsc -b && vite build --mode production",
-    "build:tasks": "node scripts/compile-tasks.mjs",
+    "build:handlers": "node scripts/compile-handlers.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
