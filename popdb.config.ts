@@ -1,17 +1,17 @@
 export default {
-  // Event types define the messages that flow through your agent pipeline.
-  // Each event type can optionally include a JSON Schema for payload validation.
-  eventTypes: {
+  // Events define the messages that flow through your agent pipeline.
+  // Each event can optionally include a JSON Schema for payload validation.
+  events: {
     'task.created': {
       displayName: 'Task Created',
     },
   },
 
-  // Handlers are TypeScript functions that process events.
-  // Each handler listens to one or more event types and can emit new events.
-  handlers: {
+  // Tasks are TypeScript functions that process events.
+  // Each task listens to one or more events and can emit new events.
+  tasks: {
     'on-task-created': {
-      file: './handlers/on-task-created.ts',
+      file: './tasks/on-task-created.ts',
       listensTo: ['task.created'],
       concurrency: 5,
       timeout: 30000,
